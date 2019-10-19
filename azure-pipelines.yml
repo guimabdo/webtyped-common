@@ -1,19 +1,19 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
+name: $(Build.SourceBranch)$(rev:.r)
 trigger:
-- master
-
-pool:
-  vmImage: 'ubuntu-latest'
-
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+  - releases/*
+variables:
+  rev: $[counter(variables['Build.SourceBranch'], 0)]
+stages:
+- stage: Build
+  displayName: Build
+  jobs:
+    - job: SetBuildName
+      steps:
+        - powershell: Write-Host "##vso[build.updatebuildnumber]$env:Build_SourceBranchName.$env:Rev"
+          condition: contains(variables['Build.SourceBranch'], '/releases/')
+        - powershell: Write-Host "##vso[build.updatebuildnumber]0.0.0-$env:Build_SourceBranchName.$env:Rev"
+          condition: not(contains(variables['Build.SourceBranch'], '/releases/'))
+    - job: Build
+      steps:
+      - script: npm install
+      - script: tsc
