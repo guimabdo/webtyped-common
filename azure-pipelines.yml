@@ -31,7 +31,7 @@ stages:
       - task: PublishPipelineArtifact@1
         inputs:
          artifact: 'tarball'
-         targetPath: 'guimabdo-webtyped-common-$(SetVersionStep.version).tgz'
+         targetPath: 'guimabdo-webtyped-common-$(Build.BuildNumber).tgz'
 
 - stage: Deploy
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/releases/'))
