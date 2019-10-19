@@ -1,19 +1,22 @@
 name: $(Build.SourceBranch)$(rev:.r)
 trigger:
   - releases/*
+
 variables:
   rev: $[counter(variables['Build.SourceBranch'], 0)]
+
 stages:
 - stage: Build
   displayName: Build
   jobs:
     - job: SetBuildName
       steps:
-        - powershell: Write-Host "##vso[build.updatebuildnumber]$env:Build_SourceBranchName.$env:Rev"
+        - powershell: Write-Host "##vso[build.updatebuildnumber]$env:Build_SourceBranchName.$env:rev"
           condition: contains(variables['Build.SourceBranch'], '/releases/')
-        - powershell: Write-Host "##vso[build.updatebuildnumber]0.0.0-$env:Build_SourceBranchName.$env:Rev"
+        - powershell: Write-Host "##vso[build.updatebuildnumber]0.0.0-$env:Build_SourceBranchName.$env:rev"
           condition: not(contains(variables['Build.SourceBranch'], '/releases/'))
     - job: Build
+      dependsOn: SetBuildName
       steps:
       - script: npm install
       - script: tsc
