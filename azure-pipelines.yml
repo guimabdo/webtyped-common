@@ -40,7 +40,7 @@ stages:
   jobs:
   - deployment: Deploy
     environment: npm-guimabdo-webtyped-common
-    displayName: NPM - @guimabdo/webtyped
+    displayName: NPM - @guimabdo/webtyped-common
     strategy:
      runOnce:
        deploy:
