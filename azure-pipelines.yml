@@ -2,6 +2,9 @@ name: $(Build.SourceBranch)$(rev:.r)
 trigger:
   - releases/*
 
+pool:
+  vmImage: 'windows-latest'
+
 variables:
   rev: $[counter(variables['Build.SourceBranch'], 0)]
 
