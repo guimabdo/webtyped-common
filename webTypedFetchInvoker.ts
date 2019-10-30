@@ -4,12 +4,15 @@ import { WebTypedUtils } from './webTypedUtils';
 import { WebTypedEventEmitter } from './webTypedEventEmitter';
 
 export class WebTypedFetchInvoker extends WebTypedInvoker {
-    //Global setting
-    public static baseUrl: string = null;
-    constructor(
-        private baseUrl: string = WebTypedFetchInvoker.baseUrl
-    ) {
+    constructor(private baseUrl: string = "/") {
         super();
+    }
+
+    public createHeaders(){
+        let headers = new Headers({
+            'Content-Type': 'application/json'
+        });
+        return Promise.resolve(headers);
     }
     
     public async invoke<TParameters, TResult>(
@@ -33,9 +36,7 @@ export class WebTypedFetchInvoker extends WebTypedInvoker {
         var req = fetch(url, {
             body: body ? JSON.stringify(body) : undefined,
             method: httpMethod,
-            headers: new Headers({
-                'Content-Type': 'application/json'
-            })
+            headers: await this.createHeaders()
         });
         let r = await req;
 
